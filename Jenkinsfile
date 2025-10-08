@@ -4,26 +4,38 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/shravanisonu123/todo-list-app.git'
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: '*/master']], 
+                    userRemoteConfigs: [[url: 'https://github.com/shravanisonu123/todo-list-app.git']]
+                ])
             }
         }
+
         stage('Build') {
             steps {
-                echo 'Running main.py...'
-                bat 'python main.py'
+                echo 'Building the application...'
+                // Add build commands here if needed
             }
         }
-        stage('Archive') {
+
+        stage('Test') {
             steps {
-                echo 'Archiving main.py...'
-                archiveArtifacts artifacts: 'main.py'
+                echo 'Running tests...'
+                // Add test commands here if needed
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the app...'
+                // Add deploy commands here if needed
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline finished successfully!'
+            echo 'Pipeline completed successfully!'
         }
         failure {
             echo 'Pipeline failed!'
